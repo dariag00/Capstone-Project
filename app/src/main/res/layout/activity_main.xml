@@ -1,18 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+    android:id="@+id/main_base_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    tools:context=".ui.main.MainActivity">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_expense_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <LinearLayout
+        android:id="@+id/add_container"
         android:layout_width="wrap_content"
+        android:layout_gravity="end|bottom"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_add"
+            android:text="@string/add_a_new_group"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fb_main_add"
+            android:layout_width="56dp"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_add_white_56dp"
+            android:layout_margin="8dp"
+            android:layout_height="56dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/import_container"
+        android:layout_width="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_import"
+            android:text="@string/import_a_group"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fb_main_import"
+            android:layout_width="56dp"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/ic_arrow_downward_black_24dp"
+            android:layout_margin="8dp"
+            android:layout_height="56dp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fb_main_menu"
+        android:layout_width="56dp"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_add_white_56dp"
+        android:layout_margin="8dp"
+        android:layout_height="56dp" />
+
+</FrameLayout>

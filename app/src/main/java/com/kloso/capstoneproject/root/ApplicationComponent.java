@@ -1,6 +1,6 @@
 package com.kloso.capstoneproject.root;
 
-import com.kloso.capstoneproject.MainActivity;
+import com.kloso.capstoneproject.ui.main.MainActivity;
 
 import javax.inject.Singleton;
 

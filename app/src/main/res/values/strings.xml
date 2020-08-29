@@ -3,4 +3,6 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="log_in">Log In</string>
+    <string name="import_a_group">Import a Group</string>
+    <string name="add_a_new_group">Add a new Group</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.kloso.capstoneproject;
+package com.kloso.capstoneproject.ui.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+
+import com.kloso.capstoneproject.R;
+import com.kloso.capstoneproject.ui.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

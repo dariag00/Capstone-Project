@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1026874885364",
+    "firebase_url": "https://expensesharing-5bce1.firebaseio.com",
+    "project_id": "expensesharing-5bce1",
+    "storage_bucket": "expensesharing-5bce1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026874885364:android:9efae78977fcb1dea6caa1",
+        "android_client_info": {
+          "package_name": "com.kloso.capstoneproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026874885364-0mrrdnh3b1h5ener69tbvfd6eartt1to.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kloso.capstoneproject",
+            "certificate_hash": "9b61afb5d51b8df468abce6a710f0305c3c040cd"
+          }
+        },
+        {
+          "client_id": "1026874885364-rnopjromoljos73ol8oj7fqut6gqk0ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBhoZ3W-q8KIM3x0chDJEHkE1HVMkO-u4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026874885364-rnopjromoljos73ol8oj7fqut6gqk0ct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

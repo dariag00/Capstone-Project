@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
     }
 
     public void closeFABMenu(){
-        System.out.println("ENTRO");
         isFabOpen = false;
         ViewAnimation.rotateFab(mainFab, false);
         ViewAnimation.animateFabTranslation(addContainer,0);

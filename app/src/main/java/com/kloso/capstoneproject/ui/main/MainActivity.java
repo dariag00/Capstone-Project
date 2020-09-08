@@ -4,18 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kloso.capstoneproject.Constants;
+import com.kloso.capstoneproject.ui.create.group.CreateGroupActivity;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.ui.DetailActivity;
@@ -83,7 +81,10 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
             }
         });
         
-        addGroupFab.setOnClickListener(fab -> Toast.makeText(this, "New group clicked", Toast.LENGTH_SHORT).show());
+        addGroupFab.setOnClickListener(fab -> {
+            Intent intent = new Intent(this, CreateGroupActivity.class);
+            startActivity(intent);
+        });
         importGroupFab.setOnClickListener(fab -> Toast.makeText(this, "Import group clicked", Toast.LENGTH_SHORT).show());
     }
 

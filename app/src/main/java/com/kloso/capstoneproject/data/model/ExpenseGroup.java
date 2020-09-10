@@ -13,10 +13,12 @@ public class ExpenseGroup implements Serializable {
     private String description;
     private List<Participant> participants;
     private ExtendedCurrency currency;
+    private List<String> associatedUsers;
 
 
     public ExpenseGroup(){
         participants = new ArrayList<>();
+        associatedUsers = new ArrayList<>();
     }
 
     public String getName() {
@@ -62,4 +64,17 @@ public class ExpenseGroup implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
+    public List<String> getAssociatedUsers() {
+        return associatedUsers;
+    }
+
+    public void setAssociatedUsers(List<String> associatedUsers) {
+        this.associatedUsers = associatedUsers;
+    }
+
+    public void addUser(String email){
+        this.associatedUsers.add(email);
+    }
+
 }

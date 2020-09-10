@@ -1,7 +1,5 @@
 package com.kloso.capstoneproject.ui.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -24,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.kloso.capstoneproject.R;
+import com.kloso.capstoneproject.data.FirestoreViewModel;
+import com.kloso.capstoneproject.data.model.User;
 import com.kloso.capstoneproject.ui.main.MainActivity;
 import com.kloso.capstoneproject.ui.signup.SignUpActivity;
 
@@ -100,22 +103,32 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                firebaseAuthWithGoogle(account.getIdToken());
+                firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
+    private void firebaseAuthWithGoogle(GoogleSignInAccount googleSignInAccount) {
         System.out.println("firebaseAuthWithGoogle");
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
-                    System.out.println("firebaseAuthWithGoogle res");
                     if (task.isSuccessful()) {
                         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                         Log.d(TAG, "firebaseAuthWithGoogle:success");
+
+                        User user = new User();
+                        user.setEmail(firebaseUser.getEmail());
+                        user.setUsername(googleSignInAccount.getDisplayName());
+                        user.setName(googleSignInAccount.getGivenName());
+                        user.setSurname(googleSignInAccount.getFamilyName());
+
+                        FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
+                        firestoreViewModel.saveUser(user);
+
                         processLoginResult(firebaseUser);
                     } else {
                         Log.w(TAG, "firebaseAuthWithGoogle:failure", task.getException());

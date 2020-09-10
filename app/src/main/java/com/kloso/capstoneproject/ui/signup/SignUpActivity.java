@@ -1,8 +1,5 @@
 package com.kloso.capstoneproject.ui.signup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,12 +12,13 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.kloso.capstoneproject.R;
+import com.kloso.capstoneproject.data.FirestoreViewModel;
+import com.kloso.capstoneproject.data.model.User;
 import com.kloso.capstoneproject.ui.main.MainActivity;
 
 import butterknife.BindView;
@@ -110,12 +108,18 @@ public class SignUpActivity extends AppCompatActivity {
         String name = nameEditText.getText().toString();
         String surname = surnameEditText.getText().toString();
 
+        User user = new User();
+        user.setEmail(email);
+        user.setName(name);
+        user.setSurname(surname);
+
         Log.d(TAG, "SignUp attempt received. Username: <" + email + "> password: <" + password + ">");
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if(task.isSuccessful()){
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
+                        firestoreViewModel.saveUser(user);
                         Intent intent = new Intent(this, MainActivity.class);
                         startActivity(intent);
                     } else {

@@ -1,26 +1,26 @@
 package com.kloso.capstoneproject.ui.main;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kloso.capstoneproject.Constants;
-import com.kloso.capstoneproject.ui.create.group.CreateGroupActivity;
 import com.kloso.capstoneproject.R;
+import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.ui.DetailActivity;
 import com.kloso.capstoneproject.ui.ViewAnimation;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.kloso.capstoneproject.ui.create.group.CreateGroupActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
 
         populateRecyclerView();
 
+        populateFABs();
+
     }
 
     private void populateRecyclerView(){
@@ -69,8 +71,14 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         adapter = new ExpenseGroupsAdapter(this);
         expenseRecyclerView.setAdapter(adapter);
 
-        adapter.setExpenseGroupList(populateMockData());
+        FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
+        firestoreViewModel.getExpenseGroups().observe(this, expenseGroups -> {
+            Log.i(TAG, "Received new Expense Groups data. Size: " + expenseGroups.size());
+            adapter.setExpenseGroupList(expenseGroups);
+        });
+    }
 
+    private void populateFABs(){
         isFabOpen = false;
 
         mainFab.setOnClickListener(fab -> {
@@ -80,7 +88,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
                 closeFABMenu();
             }
         });
-        
+
         addGroupFab.setOnClickListener(fab -> {
             Intent intent = new Intent(this, CreateGroupActivity.class);
             startActivity(intent);
@@ -127,21 +135,4 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         startActivity(intent);
     }
 
-
-    private List<ExpenseGroup> populateMockData(){
-        List<ExpenseGroup> expenseGroupList = new ArrayList<>();
-
-
-        ExpenseGroup expenseGroup = new ExpenseGroup();
-        expenseGroup.setName("Test Group");
-        expenseGroup.setDescription("Test Description");
-        expenseGroupList.add(expenseGroup);
-
-        expenseGroup = new ExpenseGroup();
-        expenseGroup.setName("Test Group");
-        expenseGroup.setDescription("Test Description Test Description Test Description Test Description Test Description Test Description Test Description");
-        expenseGroupList.add(expenseGroup);
-
-        return expenseGroupList;
-    }
 }

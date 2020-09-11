@@ -1,6 +1,5 @@
 package com.kloso.capstoneproject.data.model;
 
-import com.mynameismidori.currencypicker.ExtendedCurrency;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ public class ExpenseGroup implements Serializable {
     private String name;
     private String description;
     private List<Participant> participants;
-    private ExtendedCurrency currency;
+    private String currencyCode;
     private List<String> associatedUsers;
 
 
@@ -49,12 +48,12 @@ public class ExpenseGroup implements Serializable {
         participants.add(participant);
     }
 
-    public ExtendedCurrency getCurrency() {
-        return currency;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 
-    public void setCurrency(ExtendedCurrency currency) {
-        this.currency = currency;
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     public String getId() {

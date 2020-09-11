@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
                         startActivity(intent);
                     } else {
                         Log.w(TAG, "processSignUpAttempt: Sign up error: ", task.getException());
-                        Toast.makeText(this, "Error when signing up", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error when signing up: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         changeFormVisibility(true);
                     }
                 });

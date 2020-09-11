@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,7 @@ import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.ui.DetailActivity;
+import com.kloso.capstoneproject.ui.SwipeToDeleteCallback;
 import com.kloso.capstoneproject.ui.ViewAnimation;
 import com.kloso.capstoneproject.ui.create.group.CreateGroupActivity;
 
@@ -58,18 +61,23 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
 
         ButterKnife.bind(this);
 
-        populateRecyclerView();
+        setUpRecyclerView();
 
         populateFABs();
 
     }
 
-    private void populateRecyclerView(){
+    private void setUpRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         expenseRecyclerView.setLayoutManager(linearLayoutManager);
         expenseRecyclerView.setHasFixedSize(true);
-        adapter = new ExpenseGroupsAdapter(this);
+        adapter = new ExpenseGroupsAdapter(this, this);
         expenseRecyclerView.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, this));
+        itemTouchHelper.attachToRecyclerView(expenseRecyclerView);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(expenseRecyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        expenseRecyclerView.addItemDecoration(dividerItemDecoration);
 
         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
         firestoreViewModel.getExpenseGroups().observe(this, expenseGroups -> {

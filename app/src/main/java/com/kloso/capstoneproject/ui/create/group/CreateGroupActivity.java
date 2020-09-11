@@ -2,14 +2,19 @@ package com.kloso.capstoneproject.ui.create.group;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
@@ -43,6 +48,12 @@ public class CreateGroupActivity extends AppCompatActivity {
     Button buttonCurrency;
     @BindView(R.id.button_create)
     Button createButton;
+    @BindView(R.id.tv_currency)
+    TextView selectedCurrencyView;
+    @BindView(R.id.pb_create_group)
+    ProgressBar progressBar;
+    @BindView(R.id.form_login)
+    ScrollView formLogin;
 
     private ParticipantGroupAdapter groupAdapter;
     private ExtendedCurrency selectedCurrency;
@@ -57,8 +68,10 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         participantList = new ArrayList<>();
 
-        attachCurrencyButton();
-        populateRecyclerView();
+        changeFormVisibility(true);
+
+        setUpCurrencyButton();
+        setUpRecyclerView();
 
         addParticipantButton.setOnClickListener(view -> {
             String name = participantNameView.getText().toString();
@@ -72,7 +85,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     }
 
-    private void populateRecyclerView(){
+    private void setUpRecyclerView(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         participantsView.setLayoutManager(linearLayoutManager);
         participantsView.setHasFixedSize(true);
@@ -96,12 +109,16 @@ public class CreateGroupActivity extends AppCompatActivity {
         groupAdapter.setParticipantList(participantList);
     }
 
-    private void attachCurrencyButton(){
+    private void setUpCurrencyButton(){
+
+        selectedCurrencyView.setText(getString(R.string.selected, ""));
+
         CurrencyPicker picker = CurrencyPicker.newInstance("Select Currency");
         buttonCurrency.setOnClickListener(view -> {
             picker.setListener((name, code, symbol, flagDrawableResID) -> {
                 selectedCurrency =  ExtendedCurrency.getCurrencyByName(name);
                 Log.i(TAG, "Selected " + name + " currency. Symbol: " + selectedCurrency.getSymbol());
+                selectedCurrencyView.setText(getString(R.string.selected, selectedCurrency.getCode()) );
                 picker.dismiss();
             });
             picker.show(getSupportFragmentManager(), "CURRENCY_PICKER");
@@ -109,19 +126,28 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void createExpenseGroup(){
+
+        changeFormVisibility(false);
+
         if(validateGroup()) {
             ExpenseGroup expenseGroup = new ExpenseGroup();
             expenseGroup.setParticipants(participantList);
             expenseGroup.setName(titleView.getText().toString());
             expenseGroup.setDescription(descriptionView.getText().toString());
-            expenseGroup.setCurrency(selectedCurrency);
+            expenseGroup.setCurrencyCode(selectedCurrency.getCode());
             expenseGroup.addUser(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
             FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
             firestoreViewModel.saveExpenseGroup(expenseGroup);
 
+            changeFormVisibility(true);
             finish();
         }
+    }
+
+    private void changeFormVisibility(boolean showLoginForm){
+        formLogin.setVisibility(showLoginForm ? View.VISIBLE : View.GONE);
+        progressBar.setVisibility(showLoginForm ? View.GONE :  View.VISIBLE);
     }
 
     private boolean validateGroup(){
@@ -135,6 +161,9 @@ public class CreateGroupActivity extends AppCompatActivity {
             validGroup = false;
             descriptionView.setError("Description is empty!");
             descriptionView.requestFocus();
+        } else if(selectedCurrency == null){
+            validGroup = false;
+            Snackbar.make(findViewById(R.id.main_base_layout), "Please, select a currency", Snackbar.LENGTH_LONG).show();
         }
 
         return validGroup;

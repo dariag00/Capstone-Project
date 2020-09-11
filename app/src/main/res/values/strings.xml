@@ -9,4 +9,12 @@
     <string name="name">Name</string>
     <string name="surname">Surname</string>
     <string name="repeat_password">Repeat Password</string>
+    <string name="selected">Selected: %1$s</string>
+    <string name="select_a_currency">Select a Currency</string>
+    <string name="participants">Participants:</string>
+    <string name="participant_name">Participant Name</string>
+    <string name="add">Add</string>
+    <string name="create_group">Create Group</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
 </resources>

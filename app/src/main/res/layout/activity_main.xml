@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/main_base_layout"
+<FrameLayout android:id="@+id/main_base_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="8dp"
-    tools:context=".ui.main.MainActivity">
+    android:background="@color/grayBackground"
+    tools:context=".ui.main.MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_expense_group"
@@ -35,7 +35,8 @@
             android:layout_width="56dp"
             android:layout_gravity="end|bottom"
             android:src="@drawable/ic_add_white_56dp"
-            android:layout_margin="8dp"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_margin="16dp"
             android:layout_height="56dp" />
 
     </LinearLayout>
@@ -60,7 +61,8 @@
             android:layout_width="56dp"
             android:layout_gravity="end|bottom"
             android:src="@drawable/ic_arrow_downward_black_24dp"
-            android:layout_margin="8dp"
+            app:backgroundTint="@color/colorAccent"
+            android:layout_margin="16dp"
             android:layout_height="56dp" />
 
     </LinearLayout>
@@ -70,7 +72,7 @@
         android:layout_width="56dp"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_white_56dp"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:layout_height="56dp" />
 
 </FrameLayout>

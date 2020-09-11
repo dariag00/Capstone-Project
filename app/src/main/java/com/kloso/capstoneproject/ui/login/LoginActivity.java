@@ -138,22 +138,41 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void processLoginAttempt(){
-        changeFormVisibility(false);
-        String email = emailEditText.getText().toString();
-        String password = passwordEditText.getText().toString();
+        if(validateLoginAttempt()) {
+            changeFormVisibility(false);
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
 
-        Log.d(TAG, "Login attempt received. Username: <" + email + "> password: <" + password + ">");
+            Log.d(TAG, "Login attempt received. Username: <" + email + "> password: <" + password + ">");
 
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if(task.isSuccessful()){
-                        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                        processLoginResult(firebaseUser);
-                    } else {
-                        Log.w(TAG, "processLoginAttempt: Sign in error: ", task.getException());
-                        processLoginResult(null);
-                    }
-                });
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            processLoginResult(firebaseUser);
+                        } else {
+                            Log.w(TAG, "processLoginAttempt: Sign in error: ", task.getException());
+                            processLoginResult(null);
+                        }
+                    });
+        }
+    }
+
+    private boolean validateLoginAttempt(){
+
+        boolean validAttempt = true;
+
+        if(emailEditText.getText().toString().isEmpty()){
+            emailEditText.setError("Email is empty!");
+            emailEditText.requestFocus();
+            validAttempt = false;
+        } else if(passwordEditText.getText().toString().isEmpty()){
+            passwordEditText.setError("Password is empty!");
+            passwordEditText.requestFocus();
+            validAttempt = false;
+        }
+
+        return validAttempt;
     }
 
     private void changeFormVisibility(boolean showLoginForm){

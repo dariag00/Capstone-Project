@@ -35,6 +35,7 @@ public class FirestoreViewModel extends ViewModel {
                 Log.w(TAG, "Snapshot listener failed: ", error);
                 savedExpenseGroups.setValue(null);
             } else {
+                Log.i(TAG, "Expense groups obtained correctly");
                 List<ExpenseGroup> expenseGroups = new ArrayList<>();
                 for(QueryDocumentSnapshot document : value){
                     expenseGroups.add(document.toObject(ExpenseGroup.class));

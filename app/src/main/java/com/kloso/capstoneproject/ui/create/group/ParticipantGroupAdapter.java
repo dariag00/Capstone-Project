@@ -1,5 +1,6 @@
 package com.kloso.capstoneproject.ui.create.group;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.model.Participant;
 import com.kloso.capstoneproject.ui.main.ExpenseGroupsAdapter;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGroupAdapter.ParticipantGroupViewHolder> {
 
@@ -55,6 +58,8 @@ public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGro
 
         @BindView(R.id.tv_participant_name)
         TextView participantNameView;
+        @BindView(R.id.profile_image)
+        CircleImageView circleImageView;
 
         public ParticipantGroupViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +68,9 @@ public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGro
 
         void bind(Participant participant){
             participantNameView.setText(participant.getName());
+            System.out.println("URI:" + participant.getProfilePictureUri());
+            if(participant.getProfilePictureUri() != null)
+                Picasso.get().load(Uri.parse(participant.getProfilePictureUri())).error(R.drawable.ic_add_black_56dp).into(circleImageView);
         }
     }
 

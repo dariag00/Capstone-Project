@@ -125,14 +125,16 @@ public class LoginActivity extends AppCompatActivity {
                         user.setUsername(googleSignInAccount.getDisplayName());
                         user.setName(googleSignInAccount.getGivenName());
                         user.setSurname(googleSignInAccount.getFamilyName());
+                        user.setProfilePicUri(googleSignInAccount.getPhotoUrl().toString());
+                        System.out.println("URI:" + googleSignInAccount.getPhotoUrl());
 
                         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
                         firestoreViewModel.saveUser(user);
 
-                        processLoginResult(firebaseUser);
+                        processLoginResult(firebaseUser, null);
                     } else {
                         Log.w(TAG, "firebaseAuthWithGoogle:failure", task.getException());
-                        processLoginResult(null);
+                        processLoginResult(null, task.getException().getMessage());
                     }
                 });
     }
@@ -149,10 +151,10 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                            processLoginResult(firebaseUser);
+                            processLoginResult(firebaseUser, null);
                         } else {
                             Log.w(TAG, "processLoginAttempt: Sign in error: ", task.getException());
-                            processLoginResult(null);
+                            processLoginResult(null, task.getException().getMessage());
                         }
                     });
         }
@@ -185,12 +187,12 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void processLoginResult(FirebaseUser user){
+    private void processLoginResult(FirebaseUser user, String message){
         if(user != null) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         } else {
-            Snackbar.make(formLogin, "Authentication Failed.", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(formLogin, "Authentication Failed: " + message, Snackbar.LENGTH_LONG).show();
         }
         changeFormVisibility(true);
     }

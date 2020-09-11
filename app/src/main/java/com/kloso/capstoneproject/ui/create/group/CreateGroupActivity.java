@@ -104,6 +104,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         participant.setRealUser(true);
         participant.setName(user.getFullName());
         participant.setAssociatedUserId(user.getEmail());
+        participant.setProfilePictureUri(user.getProfilePicUri());
 
         participantList.add(participant);
         groupAdapter.setParticipantList(participantList);

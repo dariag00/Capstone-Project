@@ -8,6 +8,7 @@ public class User {
     private String username;
     private String name;
     private String surname;
+    private String profilePicUri;
 
     public String getEmail() {
         return email;
@@ -45,4 +46,11 @@ public class User {
         return this.name + " " + this.surname;
     }
 
+    public String getProfilePicUri() {
+        return profilePicUri;
+    }
+
+    public void setProfilePicUri(String profilePicUri) {
+        this.profilePicUri = profilePicUri;
+    }
 }

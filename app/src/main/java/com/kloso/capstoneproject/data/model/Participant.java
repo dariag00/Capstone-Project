@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Participant implements Serializable {
 
     private String name;
+    private String profilePictureUri;
     private boolean realUser;
     private String associatedUserId;
 
@@ -37,5 +38,13 @@ public class Participant implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProfilePictureUri() {
+        return profilePictureUri;
+    }
+
+    public void setProfilePictureUri(String profilePictureUri) {
+        this.profilePictureUri = profilePictureUri;
     }
 }

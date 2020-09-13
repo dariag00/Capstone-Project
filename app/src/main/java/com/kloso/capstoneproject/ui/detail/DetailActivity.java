@@ -37,6 +37,7 @@ import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.ui.ViewAnimation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,12 +145,12 @@ public class DetailActivity extends AppCompatActivity {
         for(int i = 0; i<participants.size(); i++){
             Participant participant = participants.get(i);
             System.out.println("Balance: " + participant.getNetBalance());
-            BarEntry barEntry = new BarEntry(i, (float) participant.getNetBalance());
+            BarEntry barEntry = new BarEntry(i,  Float.valueOf(participant.getNetBalance().toString()));
             values.add(barEntry);
 
             xAxisValues.add(participant.getName());
 
-            if(participant.getNetBalance() >= 0){
+            if(new BigDecimal(participant.getNetBalance()).compareTo(BigDecimal.ZERO) > 0){
                 colors.add(green);
             } else {
                 colors.add(red);

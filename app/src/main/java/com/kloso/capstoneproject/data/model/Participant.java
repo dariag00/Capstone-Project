@@ -1,7 +1,9 @@
 package com.kloso.capstoneproject.data.model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
-import java.util.Objects;
+import java.math.BigDecimal;
 
 public class Participant implements Serializable {
 
@@ -9,13 +11,16 @@ public class Participant implements Serializable {
     private String profilePictureUri;
     private boolean realUser;
     private String associatedUserId;
-    private double netBalance;
+    private String netBalance;
 
-    public Participant(){}
+    public Participant(){
+        this.netBalance = "0";
+    }
 
     public Participant(String name){
         realUser = false;
         this.name = name;
+        this.netBalance = "0";
     }
 
     public boolean isRealUser() {
@@ -50,15 +55,21 @@ public class Participant implements Serializable {
         this.profilePictureUri = profilePictureUri;
     }
 
-    public void addBalance(double balance){
-        this.netBalance+=balance;
+    public void addBalance(BigDecimal balance){
+        System.out.println("Añado: " + balance.toString());
+        this.netBalance = new BigDecimal(this.netBalance).add(balance).toString();
     }
 
-    public double getNetBalance() {
+    public String getNetBalance() {
         return netBalance;
     }
 
-    public void setNetBalance(double netBalance) {
+    @Exclude
+    public BigDecimal getNetBalanceBigDecimal(){
+        return new BigDecimal(this.netBalance);
+    }
+
+    public void setNetBalance(String netBalance) {
         this.netBalance = netBalance;
     }
 
@@ -74,4 +85,11 @@ public class Participant implements Serializable {
     public int hashCode() {
         return name.hashCode();
     }
+
+
+    @Exclude
+    public int compareTo(Participant participant){
+        return this.getNetBalanceBigDecimal().compareTo(participant.getNetBalanceBigDecimal());
+    }
+
 }

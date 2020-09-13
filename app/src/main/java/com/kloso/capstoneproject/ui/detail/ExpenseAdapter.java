@@ -74,7 +74,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
         public void bind(Expense expense) {
             expenseNameView.setText(expense.getExpenseName());
-            expenseAmountView.setText(expense.getAmount() + extendedCurrency.getSymbol());
+            expenseAmountView.setText(expense.getAmount().toString() + extendedCurrency.getSymbol());
             paidByView.setText(expense.getPaidBy().getName());
 
             DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(context);

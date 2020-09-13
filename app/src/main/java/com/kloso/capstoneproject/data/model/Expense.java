@@ -8,7 +8,7 @@ public class Expense implements Serializable {
 
     private Participant paidBy;
     private List<Participant> paidFor;
-    private double amount;
+    private String amount;
     private String expenseName;
     private Date expenseDate;
     private boolean isProcessed;
@@ -33,11 +33,11 @@ public class Expense implements Serializable {
         this.paidFor = paidFor;
     }
 
-    public double getAmount() {
+    public String getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(String amount) {
         this.amount = amount;
     }
 

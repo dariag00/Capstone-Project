@@ -26,6 +26,7 @@ import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.data.model.Participant;
 import com.kloso.capstoneproject.ui.dialog.DatePickerFragment;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -112,7 +113,7 @@ public class CreateExpenseActivity extends AppCompatActivity {
         if(isValidExpenseCreation()){
             try {
                 String title = titleView.getText().toString();
-                double amount = Double.valueOf(amountView.getText().toString());
+                String amount = amountView.getText().toString();
                 String dateString = dateView.getText().toString();
                 Participant selectedParticipant = expenseGroup.getParticipantByName(paidByView.getText().toString());
 

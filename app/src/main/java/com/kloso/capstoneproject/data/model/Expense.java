@@ -11,9 +11,10 @@ public class Expense implements Serializable {
     private double amount;
     private String expenseName;
     private Date expenseDate;
+    private boolean isProcessed;
 
     public Expense(){
-
+        isProcessed = false;
     }
 
     public Participant getPaidBy() {
@@ -54,5 +55,13 @@ public class Expense implements Serializable {
 
     public void setExpenseDate(Date expenseDate) {
         this.expenseDate = expenseDate;
+    }
+
+    public boolean isProcessed() {
+        return isProcessed;
+    }
+
+    public void setProcessed(boolean processed) {
+        isProcessed = processed;
     }
 }

@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kloso.capstoneproject.BalanceCalculator;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 
@@ -34,7 +33,7 @@ public class BalancesListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_owing_list, container, false);
         ButterKnife.bind(this, rootView);
 
-        BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants());
+        //BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants());
 
         return rootView;
     }

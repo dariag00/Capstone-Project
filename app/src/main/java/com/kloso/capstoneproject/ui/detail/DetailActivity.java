@@ -86,10 +86,12 @@ public class DetailActivity extends AppCompatActivity {
 
         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
         firestoreViewModel.getExpenseGroupLiveData(expenseGroup.getId()).observe(this, obtainedExpenseGroup -> {
-            Log.i("DeleteItemOnAdapter", "Obtained new expense group data. Setting the expense list to the view");
+            Log.i("DetailActivity", "Obtained new expense group data. Setting the expense list to the view");
             this.expenseGroup = obtainedExpenseGroup;
             BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants());
             setChartData(expenseGroup.getParticipants());
+            //We update the expense group so that the net balance is correctly updated
+            firestoreViewModel.updateExpenseGroup(expenseGroup);
         });
 
         setUpFABs();
@@ -162,6 +164,8 @@ public class DetailActivity extends AppCompatActivity {
         if(balanceChart.getData() != null && balanceChart.getData().getDataSetCount() > 0){
             set = (BarDataSet) balanceChart.getData().getDataSetByIndex(0);
             set.setValues(values);
+            set.setColors(colors);
+            set.setValueTextColors(colors);
             balanceChart.getData().notifyDataChanged();
             balanceChart.notifyDataSetChanged();
         } else {

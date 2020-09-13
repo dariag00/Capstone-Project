@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,19 +14,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kloso.capstoneproject.R;
-import com.kloso.capstoneproject.ui.main.ExpenseGroupsAdapter;
 
-public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback{
+public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-    private ExpenseGroupsAdapter expenseGroupsAdapter;
     private Drawable deleteIcon;
     private final ColorDrawable backgroundColor;
+    private SwipeListener swipeListener;
 
-    public SwipeToDeleteCallback(ExpenseGroupsAdapter expenseGroupsAdapter, Context context){
+    public SwipeToDeleteCallback(Context context, SwipeListener swipeListener){
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
-        this.expenseGroupsAdapter = expenseGroupsAdapter;
         backgroundColor = new ColorDrawable(Color.RED);
         deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white_24dp);
+        this.swipeListener = swipeListener;
     }
 
     @Override
@@ -35,8 +35,9 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback{
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        Log.i("TAG", "Item swiped");
         int position = viewHolder.getAdapterPosition();
-        expenseGroupsAdapter.deleteItem(position);
+        swipeListener.deleteItem(position);
     }
 
     @Override
@@ -78,4 +79,9 @@ public class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback{
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
 
     }
+
+    public interface SwipeListener {
+        public void deleteItem(int position);
+    }
+
 }

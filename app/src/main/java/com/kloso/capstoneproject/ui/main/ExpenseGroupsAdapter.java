@@ -2,6 +2,8 @@ package com.kloso.capstoneproject.ui.main;
 
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.ExpenseGroupRepository;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
+import com.kloso.capstoneproject.ui.SwipeToDeleteCallback;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdapter.ExpenseGroupViewHolder> {
+public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdapter.ExpenseGroupViewHolder> implements SwipeToDeleteCallback.SwipeListener {
 
     private final ExpenseGroupClickListener clickListener;
     private List<ExpenseGroup> expenseGroupList;
     private ExpenseGroup deletedItem;
-    private int deletedItemPosition;
     private Activity activity;
 
     public ExpenseGroupsAdapter(ExpenseGroupClickListener clickListener, Activity context){
@@ -55,11 +57,13 @@ public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdap
         notifyDataSetChanged();
     }
 
+    @Override
     public void deleteItem(int position){
-        showConfirmationSnackbar(position);
+        Log.i("TAG", "Expense Groups Adapter delete");
+        showConfirmationDialog(position);
     }
 
-    private void showConfirmationSnackbar(int position) {
+    private void showConfirmationDialog(int position) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
         alert.setTitle("Delete Group");
@@ -71,12 +75,14 @@ public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdap
             restoreItem(position);
             dialog.cancel();
         });
+        alert.setOnCancelListener(dialogInterface -> {
+            restoreItem(position);
+        });
         alert.show();
     }
 
     private void delete(int position){
         deletedItem = expenseGroupList.get(position);
-        deletedItemPosition = position;
         expenseGroupList.remove(position);
         new ExpenseGroupRepository().deleteExpenseGroup(deletedItem);
         notifyItemRemoved(position);
@@ -84,7 +90,6 @@ public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdap
 
     private void restoreItem(int position){
         notifyItemChanged(position);
-        deletedItemPosition = -1;
     }
 
 

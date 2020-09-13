@@ -135,7 +135,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             expenseGroup.setParticipants(participantList);
             expenseGroup.setName(titleView.getText().toString());
             expenseGroup.setDescription(descriptionView.getText().toString());
-            expenseGroup.setCurrencyCode(selectedCurrency.getCode());
+            expenseGroup.setCurrencyCode(selectedCurrency.getName());
             expenseGroup.addUser(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
             FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);

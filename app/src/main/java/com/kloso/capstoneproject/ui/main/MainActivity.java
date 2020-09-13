@@ -20,7 +20,7 @@ import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
-import com.kloso.capstoneproject.ui.DetailActivity;
+import com.kloso.capstoneproject.ui.detail.DetailActivity;
 import com.kloso.capstoneproject.ui.SwipeToDeleteCallback;
 import com.kloso.capstoneproject.ui.ViewAnimation;
 import com.kloso.capstoneproject.ui.create.group.CreateGroupActivity;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
 
         setUpRecyclerView();
 
-        populateFABs();
+        setUpFABs();
 
     }
 
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         expenseRecyclerView.setHasFixedSize(true);
         adapter = new ExpenseGroupsAdapter(this, this);
         expenseRecyclerView.setAdapter(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter, this));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(this, adapter));
         itemTouchHelper.attachToRecyclerView(expenseRecyclerView);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(expenseRecyclerView.getContext(),
                 linearLayoutManager.getOrientation());
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         });
     }
 
-    private void populateFABs(){
+    private void setUpFABs(){
         isFabOpen = false;
 
         mainFab.setOnClickListener(fab -> {

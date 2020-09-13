@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.kloso.capstoneproject.data.model.Expense;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.data.model.User;
 
@@ -20,6 +21,7 @@ public class FirestoreViewModel extends ViewModel {
     private ExpenseGroupRepository expenseGroupRepository = new ExpenseGroupRepository();
     private MutableLiveData<List<ExpenseGroup>> savedExpenseGroups = new MutableLiveData<>();
     private MutableLiveData<User> currentUser = new MutableLiveData<>();
+    private MutableLiveData<ExpenseGroup> expenseGroupLiveData = new MutableLiveData<>();
 
     public void saveExpenseGroup(ExpenseGroup expenseGroup){
         expenseGroupRepository.saveExpenseGroupItem(expenseGroup).addOnFailureListener(runnable -> {
@@ -53,7 +55,28 @@ public class FirestoreViewModel extends ViewModel {
             Log.e(TAG, "Failed to delete expense group");
         }).addOnSuccessListener(runnable -> {
             Log.i(TAG, "Expense group deleted correctly");
-        });;
+        });
+    }
+
+    public void updateExpenseGroup(ExpenseGroup expenseGroup){
+        expenseGroupRepository.updateExpenseGroup(expenseGroup).addOnFailureListener(runnable -> {
+            Log.e(TAG, "Failed to update expense group");
+        }).addOnSuccessListener(runnable -> {
+            Log.i(TAG, "Expense group updated correctly");
+        });
+    }
+
+    public LiveData<ExpenseGroup> getExpenseGroupLiveData(String expenseGroupId){
+        expenseGroupRepository.getExpenseGroup(expenseGroupId).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w(TAG, "Get Expense Group Snapshot Listener Failed:", error);
+            } else {
+                Log.i(TAG, "Expense Group obtained correctly: " + value.toString());
+                expenseGroupLiveData.setValue(value.toObject(ExpenseGroup.class));
+            }
+        });
+
+        return expenseGroupLiveData;
     }
 
     public void saveUser(User user){

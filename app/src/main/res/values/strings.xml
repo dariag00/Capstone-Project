@@ -17,4 +17,11 @@
     <string name="create_group">Create Group</string>
     <string name="description">Description</string>
     <string name="title">Title</string>
+    <string name="add_a_participant">Add a Participant</string>
+    <string name="add_a_new_expense">Add a new expense</string>
+    <string name="amount">Amount</string>
+    <string name="date">Date</string>
+    <string name="paid_for">Paid for:</string>
+    <string name="done">Done</string>
+    <string name="paid_by">Paid by</string>
 </resources>

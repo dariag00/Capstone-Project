@@ -13,11 +13,13 @@ public class ExpenseGroup implements Serializable {
     private List<Participant> participants;
     private String currencyCode;
     private List<String> associatedUsers;
+    private List<Expense> expenseList;
 
 
     public ExpenseGroup(){
         participants = new ArrayList<>();
         associatedUsers = new ArrayList<>();
+        expenseList = new ArrayList<>();
     }
 
     public String getName() {
@@ -72,8 +74,30 @@ public class ExpenseGroup implements Serializable {
         this.associatedUsers = associatedUsers;
     }
 
+    public List<Expense> getExpenseList() {
+        return expenseList;
+    }
+
+    public void setExpenseList(List<Expense> expenseList) {
+        this.expenseList = expenseList;
+    }
+
     public void addUser(String email){
         this.associatedUsers.add(email);
+    }
+
+    public void addExpense(Expense expense){
+        this.expenseList.add(expense);
+    }
+
+    public Participant getParticipantByName(String name){
+        Participant obtainedParticipant = null;
+        for(Participant participant : participants){
+            if(participant.getName().equals(name))
+                obtainedParticipant = participant;
+        }
+
+        return obtainedParticipant;
     }
 
 }

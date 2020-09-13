@@ -11,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.model.Participant;
-import com.kloso.capstoneproject.ui.main.ExpenseGroupsAdapter;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

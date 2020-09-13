@@ -37,6 +37,14 @@ public class ExpenseGroupRepository {
         return firebaseFirestore.collection("expense_groups").document(expenseGroup.getId()).delete();
     }
 
+    public Task<Void> updateExpenseGroup(ExpenseGroup expenseGroup){
+        return firebaseFirestore.collection("expense_groups").document(expenseGroup.getId()).set(expenseGroup);
+    }
+
+    public DocumentReference getExpenseGroup(String expenseGroupId){
+        return firebaseFirestore.collection("expense_groups").document(expenseGroupId);
+    }
+
     public Task<Void> saveUserData(User user){
         DocumentReference documentReference = firebaseFirestore.collection("users").document(user.getEmail());
         return documentReference.set(user);

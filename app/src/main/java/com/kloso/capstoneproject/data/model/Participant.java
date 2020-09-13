@@ -1,6 +1,7 @@
 package com.kloso.capstoneproject.data.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Participant implements Serializable {
 
@@ -8,6 +9,7 @@ public class Participant implements Serializable {
     private String profilePictureUri;
     private boolean realUser;
     private String associatedUserId;
+    private double netBalance;
 
     public Participant(){}
 
@@ -46,5 +48,30 @@ public class Participant implements Serializable {
 
     public void setProfilePictureUri(String profilePictureUri) {
         this.profilePictureUri = profilePictureUri;
+    }
+
+    public void addBalance(double balance){
+        this.netBalance+=balance;
+    }
+
+    public double getNetBalance() {
+        return netBalance;
+    }
+
+    public void setNetBalance(double netBalance) {
+        this.netBalance = netBalance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Participant that = (Participant) o;
+        return this.name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

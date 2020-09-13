@@ -64,7 +64,6 @@ public class ExpenseListFragment extends Fragment implements ExpenseAdapter.Expe
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
-        //recyclerView.setLongClickable(true);
         expenseAdapter = new ExpenseAdapter(ExtendedCurrency.getCurrencyByName(expenseGroup.getCurrencyCode()), this.getActivity(), this);
         recyclerView.setAdapter(expenseAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),

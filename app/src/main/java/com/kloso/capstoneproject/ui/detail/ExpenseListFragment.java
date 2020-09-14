@@ -73,10 +73,10 @@ public class ExpenseListFragment extends Fragment implements ExpenseAdapter.Expe
 
     @Override
     public void onExpenseClick(Expense clickedExpense, int clickedPosition) {
-        showConfirmationDialog(clickedExpense, clickedPosition);
+        showConfirmationDialog(clickedPosition);
     }
 
-    private void showConfirmationDialog(Expense clickedExpense, int position) {
+    private void showConfirmationDialog(int position) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
         alert.setTitle("Delete Expense");

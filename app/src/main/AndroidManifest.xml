@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppThemeWithBar">
-        <activity android:name=".ui.create.expense.CreateExpenseActivity"></activity>
+        <activity android:name=".AddParticipantActivity"></activity>
+        <activity android:name=".ui.create.expense.CreateExpenseActivity" />
         <activity android:name=".ui.create.group.CreateGroupActivity" />
         <activity android:name=".ui.signup.SignUpActivity" />
         <activity android:name=".ui.login.LoginActivity">

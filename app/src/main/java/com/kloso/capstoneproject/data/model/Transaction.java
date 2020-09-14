@@ -1,22 +1,29 @@
 package com.kloso.capstoneproject.data.model;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class Transaction implements Serializable {
 
-    private BigDecimal balance;
+    private String balance;
     private Participant payer;
     private Participant receiver;
 
     public Transaction() {
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    @Exclude
+    public BigDecimal getBalanceBigDecimal() {
+        return new BigDecimal(balance);
     }
 
-    public void setBalance(BigDecimal balance) {
+    public String getBalance(){
+        return this.balance;
+    }
+
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 

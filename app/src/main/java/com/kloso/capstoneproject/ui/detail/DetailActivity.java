@@ -28,6 +28,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.kloso.capstoneproject.AddParticipantActivity;
 import com.kloso.capstoneproject.BalanceCalculator;
 import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.data.model.Participant;
@@ -89,9 +90,9 @@ public class DetailActivity extends AppCompatActivity {
         firestoreViewModel.getExpenseGroupLiveData(expenseGroup.getId()).observe(this, obtainedExpenseGroup -> {
             Log.i("DetailActivity", "Obtained new expense group data. Setting the expense list to the view");
             this.expenseGroup = obtainedExpenseGroup;
-            BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants());
+            this.expenseGroup.setTransactionList(BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants()));
             setChartData(expenseGroup.getParticipants());
-            //We update the expense group so that the net balance is correctly updated
+            //We update the expense group so that the net balance is correctly updated and the transactions are added to FireStore
             firestoreViewModel.updateExpenseGroup(expenseGroup);
         });
 
@@ -195,9 +196,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        addParticipantFab.setOnClickListener(fab -> {
-            Toast.makeText(this, "DeleteItemOnAdapter", Toast.LENGTH_LONG).show();
-        });
+        addParticipantFab.setOnClickListener(fab -> goToAddParticipantActivity());
         addExpenseFab.setOnClickListener(fab -> goToCreateExpenseActivity());
     }
 
@@ -226,6 +225,12 @@ public class DetailActivity extends AppCompatActivity {
 
     private void goToCreateExpenseActivity(){
         Intent intent = new Intent(this, CreateExpenseActivity.class);
+        intent.putExtra(Constants.EXPENSE_GROUP, expenseGroup);
+        startActivity(intent);
+    }
+
+    private void goToAddParticipantActivity(){
+        Intent intent = new Intent(this, AddParticipantActivity.class);
         intent.putExtra(Constants.EXPENSE_GROUP, expenseGroup);
         startActivity(intent);
     }

@@ -17,6 +17,14 @@ public class Participant implements Serializable {
         this.netBalance = "0";
     }
 
+    public Participant(Participant participant){
+        this.name = participant.getName();
+        this.profilePictureUri = participant.getProfilePictureUri();
+        this.realUser = participant.isRealUser();
+        this.associatedUserId = participant.getAssociatedUserId();
+        this.netBalance = participant.getNetBalance();
+    }
+
     public Participant(String name){
         realUser = false;
         this.name = name;

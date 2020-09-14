@@ -3,6 +3,7 @@ package com.kloso.capstoneproject.data.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import android.util.Base64;
 import java.util.List;
 
 public class ExpenseGroup implements Serializable {
@@ -14,6 +15,7 @@ public class ExpenseGroup implements Serializable {
     private String currencyCode;
     private List<String> associatedUsers;
     private List<Expense> expenseList;
+    private List<Transaction> transactionList;
 
 
     public ExpenseGroup(){
@@ -82,6 +84,14 @@ public class ExpenseGroup implements Serializable {
         this.expenseList = expenseList;
     }
 
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
+    }
+
     public void addUser(String email){
         this.associatedUsers.add(email);
     }
@@ -98,6 +108,11 @@ public class ExpenseGroup implements Serializable {
         }
 
         return obtainedParticipant;
+    }
+
+    public String generateExportCode(){
+        String baseString =  this.getId() + "-" + this.getName();
+        return new String(Base64.encode(baseString.getBytes(), Base64.DEFAULT));
     }
 
 }

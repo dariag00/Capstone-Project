@@ -24,8 +24,14 @@ public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGro
 
     private List<Participant> participantList;
 
+    private ParticipantLongClickListener participantLongClickListener;
+
     public  ParticipantGroupAdapter(){
         participantList = new ArrayList<>();
+    }
+
+    public ParticipantGroupAdapter(ParticipantLongClickListener participantLongClickListener){
+        this.participantLongClickListener = participantLongClickListener;
     }
 
 
@@ -51,7 +57,7 @@ public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGro
         notifyDataSetChanged();
     }
 
-    class ParticipantGroupViewHolder extends RecyclerView.ViewHolder {
+    class ParticipantGroupViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
 
         @BindView(R.id.tv_participant_name)
         TextView participantNameView;
@@ -61,14 +67,28 @@ public class ParticipantGroupAdapter extends RecyclerView.Adapter<ParticipantGro
         public ParticipantGroupViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnLongClickListener(this);
         }
 
         void bind(Participant participant){
             participantNameView.setText(participant.getName());
-            System.out.println("URI:" + participant.getProfilePictureUri());
             if(participant.getProfilePictureUri() != null)
                 Picasso.get().load(Uri.parse(participant.getProfilePictureUri())).error(R.drawable.ic_add_black_56dp).into(circleImageView);
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            int clickedPosition = getAdapterPosition();
+
+            if(participantLongClickListener != null)
+                participantLongClickListener.onParticipantClick(participantList.get(clickedPosition), clickedPosition);
+
+            return true;
+        }
+    }
+
+    public interface ParticipantLongClickListener {
+        void onParticipantClick(Participant clickedParticipant, int clickedPosition);
     }
 
 }

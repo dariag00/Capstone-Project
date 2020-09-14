@@ -83,7 +83,6 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
 
         @Override
         public boolean onLongClick(View view) {
-            System.out.println("ENTROOO");
             int clickedPosition = getAdapterPosition();
             expenseLongClickListener.onExpenseClick(expenseList.get(clickedPosition), clickedPosition);
             return true;

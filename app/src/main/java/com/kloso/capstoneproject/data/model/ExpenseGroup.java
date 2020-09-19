@@ -76,6 +76,10 @@ public class ExpenseGroup implements Serializable {
         this.associatedUsers = associatedUsers;
     }
 
+    public void addAssociatedUser(String associatedUserId){
+        this.associatedUsers.add(associatedUserId);
+    }
+
     public List<Expense> getExpenseList() {
         return expenseList;
     }
@@ -113,6 +117,16 @@ public class ExpenseGroup implements Serializable {
     public String generateExportCode(){
         String baseString =  this.getId() + "-" + this.getName();
         return new String(Base64.encode(baseString.getBytes(), Base64.DEFAULT));
+    }
+
+    public boolean isUserAlreadyAdded(String userId){
+        List<Participant> participants = new ArrayList<>();
+        for(Participant participant : participants){
+            if(participant.isRealUser() && participant.getAssociatedUserId().equals(userId))
+               return true;
+        }
+
+        return false;
     }
 
 }

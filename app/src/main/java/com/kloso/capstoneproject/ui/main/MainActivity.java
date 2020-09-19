@@ -1,13 +1,18 @@
 package com.kloso.capstoneproject.ui.main;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -15,11 +20,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.kloso.capstoneproject.AssociateUserActivity;
 import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.R;
+import com.kloso.capstoneproject.data.ExpenseGroupRepository;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
+import com.kloso.capstoneproject.data.model.User;
 import com.kloso.capstoneproject.ui.detail.DetailActivity;
 import com.kloso.capstoneproject.ui.SwipeToDeleteCallback;
 import com.kloso.capstoneproject.ui.ViewAnimation;
@@ -53,6 +63,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
     TextView importTextView;
 
     private boolean isFabOpen;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,9 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        Intent previousIntent = getIntent();
+        user = (User) previousIntent.getSerializableExtra(Constants.USER);
 
         setUpRecyclerView();
 
@@ -101,7 +115,7 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
             Intent intent = new Intent(this, CreateGroupActivity.class);
             startActivity(intent);
         });
-        importGroupFab.setOnClickListener(fab -> Toast.makeText(this, "Import group clicked", Toast.LENGTH_SHORT).show());
+        importGroupFab.setOnClickListener(fab -> showImportGroupDialog());
     }
 
     public void showFABMenu(){
@@ -141,6 +155,40 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(Constants.EXPENSE_GROUP, clickedGroup);
         startActivity(intent);
+    }
+
+    private void showImportGroupDialog(){
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.import_group_dialog, null);
+
+        final EditText editText = dialogView.findViewById(R.id.et_import_code);
+
+        new AlertDialog.Builder(this, R.style.DialogTheme)
+                .setTitle("Import a group")
+                .setView(dialogView)
+                .setMessage("To join a previously created group you must enter the generated code that must have been previously provided by a member of the group.")
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    String code = editText.getText().toString();
+                    String decoded = new String(Base64.decode(code.getBytes(), Base64.DEFAULT));
+                    System.out.println("CODE: " + code + " decoded: " + decoded);
+                    String groupId = decoded.split("-")[0];
+                    new ExpenseGroupRepository().getExpenseGroup(groupId).get().addOnCompleteListener(runnable -> {
+                        if(runnable.isSuccessful()){
+                            ExpenseGroup expenseGroup = runnable.getResult().toObject(ExpenseGroup.class);
+                            if(!expenseGroup.isUserAlreadyAdded(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                                Intent intent = new Intent(this, AssociateUserActivity.class);
+                                intent.putExtra(Constants.EXPENSE_GROUP, runnable.getResult().toObject(ExpenseGroup.class));
+                                intent.putExtra(Constants.USER, user);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(this, "A participant with the same email is already associated with the group", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }).setNegativeButton(android.R.string.no, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }).show();
     }
 
 }

@@ -5,6 +5,6 @@
         android:id="@+id/action_send"
         android:orderInCategory="1"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_done_black_24dp"
+        android:icon="@drawable/ic_done_white_24dp"
         android:title="@string/done"/>
 </menu>

@@ -86,12 +86,14 @@ public class DetailActivity extends AppCompatActivity {
         toolbarLayout.setTitle(expenseGroup.getName());
         toolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
 
+        setChartData(expenseGroup.getParticipants());
+
         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
         firestoreViewModel.getExpenseGroupLiveData(expenseGroup.getId()).observe(this, obtainedExpenseGroup -> {
             Log.i("DetailActivity", "Obtained new expense group data. Setting the expense list to the view");
             this.expenseGroup = obtainedExpenseGroup;
-            this.expenseGroup.setTransactionList(BalanceCalculator.calculateBalances(expenseGroup.getExpenseList(), expenseGroup.getParticipants()));
             setChartData(expenseGroup.getParticipants());
+            this.expenseGroup.setTransactionList(BalanceCalculator.calculateBalances(expenseGroup.getParticipants()));
             //We update the expense group so that the net balance is correctly updated and the transactions are added to FireStore
             firestoreViewModel.updateExpenseGroup(expenseGroup);
         });
@@ -146,7 +148,7 @@ public class DetailActivity extends AppCompatActivity {
         for(int i = 0; i<participants.size(); i++){
             Participant participant = participants.get(i);
             System.out.println("Balance: " + participant.getNetBalance());
-            BarEntry barEntry = new BarEntry(i,  Float.valueOf(participant.getNetBalance().toString()));
+            BarEntry barEntry = new BarEntry(i,  Float.valueOf(participant.getNetBalance()));
             values.add(barEntry);
 
             xAxisValues.add(participant.getName());
@@ -180,8 +182,9 @@ public class DetailActivity extends AppCompatActivity {
             data.setBarWidth(0.8f);
 
             balanceChart.setData(data);
-            balanceChart.invalidate();
         }
+
+        balanceChart.invalidate();
 
     }
 

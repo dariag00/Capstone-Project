@@ -65,7 +65,7 @@ public class ExpenseGroupsAdapter extends RecyclerView.Adapter<ExpenseGroupsAdap
 
     private void showConfirmationDialog(int position) {
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this.activity, R.style.DialogTheme);
         alert.setTitle("Delete Group");
         alert.setMessage("Are you sure you want to delete it?");
         alert.setPositiveButton(android.R.string.yes, (dialog, which) -> {

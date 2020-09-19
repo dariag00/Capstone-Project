@@ -24,6 +24,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.User;
@@ -126,15 +127,14 @@ public class LoginActivity extends AppCompatActivity {
                         user.setName(googleSignInAccount.getGivenName());
                         user.setSurname(googleSignInAccount.getFamilyName());
                         user.setProfilePicUri(googleSignInAccount.getPhotoUrl().toString());
-                        System.out.println("URI:" + googleSignInAccount.getPhotoUrl());
 
                         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
                         firestoreViewModel.saveUser(user);
 
-                        processLoginResult(firebaseUser, null);
+                        processLoginResult(firebaseUser, user,null);
                     } else {
                         Log.w(TAG, "firebaseAuthWithGoogle:failure", task.getException());
-                        processLoginResult(null, task.getException().getMessage());
+                        processLoginResult(null, null, task.getException().getMessage());
                     }
                 });
     }
@@ -149,12 +149,16 @@ public class LoginActivity extends AppCompatActivity {
 
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
+
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                            processLoginResult(firebaseUser, null);
+                            FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
+                            firestoreViewModel.getUserByEmail(firebaseUser.getEmail()).observe(this, user -> {
+                                processLoginResult(firebaseUser, user,null);
+                            });
                         } else {
                             Log.w(TAG, "processLoginAttempt: Sign in error: ", task.getException());
-                            processLoginResult(null, task.getException().getMessage());
+                            processLoginResult(null, null, task.getException().getMessage());
                         }
                     });
         }
@@ -187,9 +191,10 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void processLoginResult(FirebaseUser user, String message){
+    private void processLoginResult(FirebaseUser user, User dbUser, String message){
         if(user != null) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(Constants.USER, dbUser);
             startActivity(intent);
         } else {
             Snackbar.make(formLogin, "Authentication Failed: " + message, Snackbar.LENGTH_LONG).show();

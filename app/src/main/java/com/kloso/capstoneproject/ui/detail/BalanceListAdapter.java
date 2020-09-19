@@ -66,7 +66,7 @@ public class BalanceListAdapter extends RecyclerView.Adapter<BalanceListAdapter.
         public void bind(Transaction transaction){
             payerNameView.setText(transaction.getPayer().getName());
             receiverNameView.setText(transaction.getReceiver().getName());
-            owingAmountView.setText(transaction.getBalanceBigDecimal().toString() + extendedCurrency.getSymbol());
+            owingAmountView.setText(transaction.getBalanceBigDecimal().abs().toString() + extendedCurrency.getSymbol());
         }
     }
 

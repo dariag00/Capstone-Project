@@ -70,7 +70,7 @@ public class ParticipantsListFragment extends Fragment implements ParticipantGro
 
     private void showConfirmationDialog(int position) {
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
+        AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity(), R.style.DialogTheme);
         alert.setTitle("Delete Participant");
         alert.setMessage("Are you sure you want to delete it?");
         alert.setPositiveButton(android.R.string.yes, (dialog, which) -> {

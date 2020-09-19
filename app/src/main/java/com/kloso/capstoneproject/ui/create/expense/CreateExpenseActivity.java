@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kloso.capstoneproject.BalanceCalculator;
 import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
@@ -26,7 +27,6 @@ import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.data.model.Participant;
 import com.kloso.capstoneproject.ui.dialog.DatePickerFragment;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -127,6 +127,9 @@ public class CreateExpenseActivity extends AppCompatActivity {
                 expense.setPaidFor(expenseParticipants);
 
                 expenseGroup.addExpense(expense);
+                
+                BalanceCalculator.processExpense(expense, expenseGroup.getParticipants());
+                expenseGroup.setTransactionList(BalanceCalculator.calculateBalances(expenseGroup.getParticipants()));
 
                 FirestoreViewModel viewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
                 viewModel.updateExpenseGroup(expenseGroup);
@@ -154,7 +157,7 @@ public class CreateExpenseActivity extends AppCompatActivity {
     }
 
     private void setUpParticipantSelector(){
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(CreateExpenseActivity.this);
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(CreateExpenseActivity.this, R.style.DialogTheme);
         builderSingle.setTitle("Select One:");
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CreateExpenseActivity.this, android.R.layout.select_dialog_singlechoice);

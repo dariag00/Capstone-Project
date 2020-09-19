@@ -8,7 +8,6 @@ import com.kloso.capstoneproject.data.model.Transaction;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,38 +18,35 @@ public class BalanceCalculator {
 
     private static List<Participant> copyParticipants;
 
+    public static void processExpense(Expense expense, List<Participant> participants){
+        if(!expense.isProcessed()) {
+            Participant payerParticipant = participants.get(participants.indexOf(expense.getPaidBy()));
+            payerParticipant.addBalance(new BigDecimal(expense.getAmount()));
 
-    private static void calculateNetBalancesOfParticipants(List<Expense> expenses, List<Participant> participants){
-        int processedExpenses = 0;
-        for(Expense expense : expenses){
-            processedExpenses++;
-            if(!expense.isProcessed()) {
-                Participant payerParticipant = participants.get(participants.indexOf(expense.getPaidBy()));
-                payerParticipant.addBalance(new BigDecimal(expense.getAmount()));
-
-                System.out.println("Payer Balance: " + payerParticipant.getNetBalance());
-
-                for (Participant owingParticipant : expense.getPaidFor()) {
-                    Participant owingP = participants.get(participants.indexOf(owingParticipant));
-                    owingP.addBalance(new BigDecimal(expense.getAmount()).negate().divide(new BigDecimal(String.valueOf(expense.getPaidFor().size())), 2, RoundingMode.HALF_EVEN));
-                }
-                expense.setProcessed(true);
+            for (Participant owingParticipant : expense.getPaidFor()) {
+                Participant owingP = participants.get(participants.indexOf(owingParticipant));
+                owingP.addBalance(new BigDecimal(expense.getAmount()).negate().divide(new BigDecimal(String.valueOf(expense.getPaidFor().size())), 2, RoundingMode.HALF_EVEN));
             }
+            expense.setProcessed(true);
         }
-
-        for(Participant participant : participants){
-            System.out.println(participant.getName() + " balance: " + participant.getNetBalance());
-        }
-
-        Log.i(TAG, "Processed " + processedExpenses + " items.");
-
     }
 
-    public static List<Transaction> calculateBalances(List<Expense> expenses, List<Participant> participants){
+    public static void revertExpense(Expense expense, List<Participant> participants){
+        if(expense.isProcessed()) {
+            Participant payerParticipant = participants.get(participants.indexOf(expense.getPaidBy()));
+            payerParticipant.addBalance(new BigDecimal(expense.getAmount()).negate());
+
+            for (Participant owingParticipant : expense.getPaidFor()) {
+                Participant owingP = participants.get(participants.indexOf(owingParticipant));
+                owingP.addBalance(new BigDecimal(expense.getAmount()).negate().divide(new BigDecimal(String.valueOf(expense.getPaidFor().size())), 2, RoundingMode.HALF_EVEN).negate());
+            }
+            expense.setProcessed(false);
+        }
+    }
+
+    public static List<Transaction> calculateBalances(List<Participant> participants){
 
         List<Transaction> transactionList = new ArrayList<>();
-
-        calculateNetBalancesOfParticipants(expenses, participants);
 
         copyParticipants = copyParticipantsList(participants);
 
@@ -92,11 +88,13 @@ public class BalanceCalculator {
                 copyParticipants.remove(mostOwedParticipant);
                 transaction.setBalance(amountToReceive.toString());
                 mostDebtorParticipant.setNetBalance(amountToPay.add(amountToReceive).toString());
-            } else if (compareValue == 1){
+                Log.i(TAG,"Updated balance: " + mostDebtorParticipant.getNetBalance());
+            } else if (compareValue == -1){
                 Log.i(TAG, "Amount to Receive is bigger. Setting amount to pay as the balance and substracting it from the amount to receive");
                 copyParticipants.remove(mostDebtorParticipant);
                 transaction.setBalance(amountToPay.toString());
-                mostOwedParticipant.setNetBalance(amountToReceive.subtract(amountToPay).toString());
+                mostOwedParticipant.setNetBalance(amountToReceive.add(amountToPay).toString());
+                Log.i(TAG, "Updated balance: " + mostOwedParticipant.getNetBalance());
             } else {
                 //Quantities are the same
                 copyParticipants.remove(mostOwedParticipant);

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kloso.capstoneproject.BalanceCalculator;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.ExpenseGroupRepository;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
@@ -78,7 +79,7 @@ public class ExpenseListFragment extends Fragment implements ExpenseAdapter.Expe
 
     private void showConfirmationDialog(int position) {
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity());
+        AlertDialog.Builder alert = new AlertDialog.Builder(this.getActivity(), R.style.DialogTheme);
         alert.setTitle("Delete Expense");
         alert.setMessage("Are you sure you want to delete it?");
         alert.setPositiveButton(android.R.string.yes, (dialog, which) -> {
@@ -95,6 +96,9 @@ public class ExpenseListFragment extends Fragment implements ExpenseAdapter.Expe
     }
 
     private void delete(int position){
+        Expense expense = expenseGroup.getExpenseList().get(position);
+        BalanceCalculator.revertExpense(expense, expenseGroup.getParticipants());
+        expenseGroup.setTransactionList(BalanceCalculator.calculateBalances(expenseGroup.getParticipants()));
         expenseGroup.getExpenseList().remove(position);
         new ExpenseGroupRepository().updateExpenseGroup(expenseGroup);
         expenseAdapter.notifyItemRemoved(position);

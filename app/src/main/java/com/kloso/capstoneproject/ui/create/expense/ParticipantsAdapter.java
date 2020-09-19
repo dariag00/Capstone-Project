@@ -1,5 +1,6 @@
 package com.kloso.capstoneproject.ui.create.expense;
 
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.model.Participant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,11 +22,22 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
 
     private List<Participant> participantList;
     private List<Participant> selectedParticipants;
+    private boolean blockRealUsers;
 
     public ParticipantsAdapter(List<Participant> participantList) {
         this.participantList = participantList;
         this.selectedParticipants = participantList;
+        this.blockRealUsers = false;
     }
+
+    public ParticipantsAdapter(List<Participant> participantList, boolean blockRealUsers) {
+        this.participantList = participantList;
+        if(blockRealUsers)
+            this.selectedParticipants = new ArrayList<>();
+        this.blockRealUsers = blockRealUsers;
+        notifyDataSetChanged();
+    }
+
 
     public void setParticipantList(List<Participant> participantList){
         this.participantList = participantList;
@@ -61,11 +74,20 @@ public class ParticipantsAdapter extends RecyclerView.Adapter<ParticipantsAdapte
         public ParticipantsAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            if(blockRealUsers) checkBox.setChecked(false);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(Participant participant){
             this.currentParticipant = participant;
             checkBox.setText(participant.getName());
+            if(blockRealUsers && participant.isRealUser()) {
+                checkBox.setClickable(false);
+                //checkBox.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.grayBackground));
+                checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                checkBox.setText(checkBox.getText().toString().concat(" (Already associated)"));
+            }
+            checkBox.setOnClickListener(this);
         }
 
         @Override

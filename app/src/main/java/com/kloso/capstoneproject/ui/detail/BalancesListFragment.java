@@ -46,7 +46,7 @@ public class BalancesListFragment extends Fragment {
         balanceListAdapter.setTransactionList(expenseGroup.getTransactionList());
 
         FirestoreViewModel firestoreViewModel = new ViewModelProvider(this).get(FirestoreViewModel.class);
-        firestoreViewModel.getExpenseGroupLiveData(expenseGroup.getId()).observe(this, obtainedExpenseGroup -> {
+        firestoreViewModel.getExpenseGroupLiveData(expenseGroup.getId()).observe(getViewLifecycleOwner(), obtainedExpenseGroup -> {
             Log.i(TAG, "Obtained new expense group data. Setting the expense list to the view");
             this.expenseGroup = obtainedExpenseGroup;
             balanceListAdapter.setTransactionList(expenseGroup.getTransactionList());

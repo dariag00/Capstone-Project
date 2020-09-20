@@ -1,35 +1,38 @@
 package com.kloso.capstoneproject.ui.detail;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
 import com.kloso.capstoneproject.AddParticipantActivity;
 import com.kloso.capstoneproject.BalanceCalculator;
+import com.kloso.capstoneproject.BalanceListWidget;
 import com.kloso.capstoneproject.Constants;
 import com.kloso.capstoneproject.data.model.Participant;
 import com.kloso.capstoneproject.ui.create.expense.CreateExpenseActivity;
@@ -37,6 +40,7 @@ import com.kloso.capstoneproject.R;
 import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.ExpenseGroup;
 import com.kloso.capstoneproject.ui.ViewAnimation;
+import com.mynameismidori.currencypicker.ExtendedCurrency;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -62,14 +66,20 @@ public class DetailActivity extends AppCompatActivity {
     FloatingActionButton addParticipantFab;
     @BindView(R.id.fb_detail_add)
     FloatingActionButton addExpenseFab;
+    @BindView(R.id.fb_add_to_widget)
+    FloatingActionButton addToWidgetFab;
     @BindView(R.id.add_parcitipant_container)
     LinearLayout addParticipantContainer;
     @BindView(R.id.add_expense_container)
     LinearLayout addExpenseContainer;
+    @BindView(R.id.add_to_widget)
+    LinearLayout addToWidgetContainer;
     @BindView(R.id.tv_add_expense)
     TextView addExpenseTextView;
     @BindView(R.id.tv_add_participant)
     TextView addParticipantTextView;
+    @BindView(R.id.tv_add_to_widget)
+    TextView addToWidgetTextView;
 
     private boolean isFabOpen = false;
 
@@ -101,6 +111,22 @@ public class DetailActivity extends AppCompatActivity {
         setUpFABs();
         setUpViewPager();
         setUpChart();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int clickedItem = item.getItemId();
+        if(clickedItem == R.id.action_attach){
+            attachInfoToWidget();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpViewPager(){
@@ -201,13 +227,15 @@ public class DetailActivity extends AppCompatActivity {
 
         addParticipantFab.setOnClickListener(fab -> goToAddParticipantActivity());
         addExpenseFab.setOnClickListener(fab -> goToCreateExpenseActivity());
+        addToWidgetFab.setOnClickListener(fab -> attachInfoToWidget());
     }
 
     public void showFABMenu(){
         isFabOpen = true;
         ViewAnimation.rotateFab(mainFab, true);
-        ViewAnimation.animateFabTranslation(addExpenseContainer, -getResources().getDimension(R.dimen.standard_65));
-        ViewAnimation.animateFabTranslation(addParticipantContainer, -getResources().getDimension(R.dimen.standard_130));
+        ViewAnimation.animateFabTranslationVertically(addExpenseContainer, -getResources().getDimension(R.dimen.standard_65));
+        ViewAnimation.animateFabTranslationVertically(addParticipantContainer, -getResources().getDimension(R.dimen.standard_130));
+        ViewAnimation.animateFabTranslationHorizontally(addToWidgetContainer, -getResources().getDimension(R.dimen.standard_65));
 
         changeFabTextViewVisibility();
     }
@@ -215,8 +243,9 @@ public class DetailActivity extends AppCompatActivity {
     public void closeFABMenu(){
         isFabOpen = false;
         ViewAnimation.rotateFab(mainFab, false);
-        ViewAnimation.animateFabTranslation(addExpenseContainer,0);
-        ViewAnimation.animateFabTranslation(addParticipantContainer, 0);
+        ViewAnimation.animateFabTranslationVertically(addExpenseContainer,0);
+        ViewAnimation.animateFabTranslationVertically(addParticipantContainer, 0);
+        ViewAnimation.animateFabTranslationHorizontally(addToWidgetContainer, 0);
 
         changeFabTextViewVisibility();
     }
@@ -224,6 +253,7 @@ public class DetailActivity extends AppCompatActivity {
     private void changeFabTextViewVisibility(){
         addExpenseTextView.setVisibility(isFabOpen ? View.VISIBLE : View.GONE);
         addParticipantTextView.setVisibility(isFabOpen ? View.VISIBLE : View.GONE);
+        addToWidgetTextView.setVisibility(isFabOpen ? View.VISIBLE : View.GONE);
     }
 
     private void goToCreateExpenseActivity(){
@@ -236,6 +266,25 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddParticipantActivity.class);
         intent.putExtra(Constants.EXPENSE_GROUP, expenseGroup);
         startActivity(intent);
+    }
+
+    private void attachInfoToWidget(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        Gson gson =new Gson();
+        String json=gson.toJson(expenseGroup.getTransactionList());
+        editor.putString("transactions",json).apply();
+        editor.putString("currencySymbol", ExtendedCurrency.getCurrencyByName(expenseGroup.getCurrencyCode()).getSymbol()).apply();
+        editor.commit();
+        Toast.makeText(this, "Widget updated!", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(this, BalanceListWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(Constants.EXPENSE_GROUP, expenseGroup);
+        this.getApplicationContext().sendBroadcast(intent);
     }
 
 }

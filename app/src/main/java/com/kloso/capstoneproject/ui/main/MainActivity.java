@@ -1,6 +1,5 @@
 package com.kloso.capstoneproject.ui.main;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.kloso.capstoneproject.AssociateUserActivity;
@@ -121,8 +119,8 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
     public void showFABMenu(){
         isFabOpen = true;
         ViewAnimation.rotateFab(mainFab, true);
-        ViewAnimation.animateFabTranslation(addContainer, -getResources().getDimension(R.dimen.standard_65));
-        ViewAnimation.animateFabTranslation(importContainer, -getResources().getDimension(R.dimen.standard_130));
+        ViewAnimation.animateFabTranslationVertically(addContainer, -getResources().getDimension(R.dimen.standard_65));
+        ViewAnimation.animateFabTranslationVertically(importContainer, -getResources().getDimension(R.dimen.standard_130));
 
         changeFabTextViewVisibility();
     }
@@ -130,8 +128,8 @@ public class MainActivity extends AppCompatActivity  implements ExpenseGroupsAda
     public void closeFABMenu(){
         isFabOpen = false;
         ViewAnimation.rotateFab(mainFab, false);
-        ViewAnimation.animateFabTranslation(addContainer,0);
-        ViewAnimation.animateFabTranslation(importContainer, 0);
+        ViewAnimation.animateFabTranslationVertically(addContainer,0);
+        ViewAnimation.animateFabTranslationVertically(importContainer, 0);
 
         changeFabTextViewVisibility();
     }

@@ -19,8 +19,12 @@ public class ViewAnimation {
         return rotate;
     }
 
-    public static void animateFabTranslation(View view, float dimen){
+    public static void animateFabTranslationVertically(View view, float dimen){
         view.animate().translationY(dimen);
+    }
+
+    public static void animateFabTranslationHorizontally(View view, float dimen){
+        view.animate().translationX(dimen);
     }
 
 }

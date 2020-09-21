@@ -35,12 +35,6 @@ import com.kloso.capstoneproject.data.FirestoreViewModel;
 import com.kloso.capstoneproject.data.model.User;
 import com.kloso.capstoneproject.ui.main.MainActivity;
 import com.kloso.capstoneproject.ui.signup.SignUpActivity;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

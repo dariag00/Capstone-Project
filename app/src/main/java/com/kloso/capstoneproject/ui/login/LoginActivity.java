@@ -1,11 +1,16 @@
 package com.kloso.capstoneproject.ui.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 
@@ -31,6 +36,11 @@ import com.kloso.capstoneproject.data.model.User;
 import com.kloso.capstoneproject.ui.main.MainActivity;
 import com.kloso.capstoneproject.ui.signup.SignUpActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
     Button signUpButton;
     @BindView(R.id.google_sign_in)
     SignInButton googleSignInButton;
+    @BindView(R.id.iv_login_image)
+    ImageView loginImageView;
 
     private FirebaseAuth firebaseAuth;
     private GoogleSignInClient googleSignInClient;
@@ -65,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         checkIfUserAlreadyLoggedIn();
+
+        new LoadImage(loginImageView, this).execute();
 
         loginButton.setOnClickListener(it -> processLoginAttempt());
 
@@ -214,5 +228,36 @@ public class LoginActivity extends AppCompatActivity {
         }
         changeFormVisibility(true);
     }
+
+
+    class LoadImage extends AsyncTask<String, Void, Bitmap> {
+
+        private ImageView imv;
+        private Context context;
+
+        public LoadImage(ImageView imv, Context context) {
+            this.imv = imv;
+            this.context = context;
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.logo);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+
+            if(result != null && imv != null){
+                imv.setVisibility(View.VISIBLE);
+                imv.setImageBitmap(result);
+            }else{
+                imv.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
 
 }

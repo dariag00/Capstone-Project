@@ -64,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        checkIfUserAlreadyLoggedIn();
+
         loginButton.setOnClickListener(it -> processLoginAttempt());
 
         signUpButton.setOnClickListener(it -> goToSignUpActivity());
@@ -76,6 +78,17 @@ public class LoginActivity extends AppCompatActivity {
 
         googleSignInButton.setOnClickListener(it -> googleSignIn());
 
+    }
+
+    private void checkIfUserAlreadyLoggedIn(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            Log.d(TAG, "checkIfUserAlreadyLoggedIn:User is signed out");
+        }
     }
 
     private void initGoogleSignInClient(){

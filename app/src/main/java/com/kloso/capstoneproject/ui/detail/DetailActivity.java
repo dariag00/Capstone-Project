@@ -113,22 +113,6 @@ public class DetailActivity extends AppCompatActivity {
         setUpChart();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int clickedItem = item.getItemId();
-        if(clickedItem == R.id.action_attach){
-            attachInfoToWidget();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void setUpViewPager(){
         tabLayout.setupWithViewPager(viewPager);
         List<Fragment> fragmentList = new ArrayList<>();

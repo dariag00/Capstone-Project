@@ -127,10 +127,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     }
 
     private void createExpenseGroup(){
-
-        changeFormVisibility(false);
-
         if(validateGroup()) {
+            changeFormVisibility(false);
             ExpenseGroup expenseGroup = new ExpenseGroup();
             expenseGroup.setParticipants(participantList);
             expenseGroup.setName(titleView.getText().toString());

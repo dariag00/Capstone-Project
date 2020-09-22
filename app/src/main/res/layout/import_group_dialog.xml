@@ -9,7 +9,7 @@
         android:id="@+id/et_import_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Import Code"
+        android:hint="@string/import_code"
         android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

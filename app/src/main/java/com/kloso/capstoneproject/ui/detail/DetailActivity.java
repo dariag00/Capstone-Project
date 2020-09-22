@@ -261,14 +261,16 @@ public class DetailActivity extends AppCompatActivity {
         editor.putString("transactions",json).apply();
         editor.putString("currencySymbol", ExtendedCurrency.getCurrencyByName(expenseGroup.getCurrencyCode()).getSymbol()).apply();
         editor.commit();
-        Toast.makeText(this, "Widget updated!", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        Intent intent = new Intent(this, BalanceListWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(this, BalanceListWidget.class));
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         intent.putExtra(Constants.EXPENSE_GROUP, expenseGroup);
         this.getApplicationContext().sendBroadcast(intent);
+
+        Toast.makeText(this, "Widget updated!", Toast.LENGTH_SHORT).show();
     }
 
 }

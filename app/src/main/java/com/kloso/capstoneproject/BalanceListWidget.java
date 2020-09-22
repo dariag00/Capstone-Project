@@ -6,9 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
 import android.widget.RemoteViews;
 
-import com.kloso.capstoneproject.ui.detail.DetailActivity;
+import com.kloso.capstoneproject.ui.login.LoginActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,14 +20,17 @@ public class BalanceListWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Construct the RemoteViews object
+        System.out.println("Entro en updateAppWidget");
+
+        Intent intent = new Intent(context, LoginActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.balance_list_widget);
-        /*Intent intent = new Intent(context, DetailActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
-        //views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
         Intent serviceIntent = new Intent(context, RemoteWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.balance_container, serviceIntent);
-        //views.setOnClickPendingIntent(R.layout.balance_list_widget, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -35,14 +40,14 @@ public class BalanceListWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, BalanceListWidget.class));
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.balance_container);
+        ComponentName thisAppWidget = new ComponentName(context.getPackageName(), BalanceListWidget.class.getName());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
         onUpdate(context,appWidgetManager,appWidgetIds);
+        new Handler().postDelayed(() -> AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetIds, R.id.balance_container), 1000);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -50,12 +55,10 @@ public class BalanceListWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
     }
 }
 

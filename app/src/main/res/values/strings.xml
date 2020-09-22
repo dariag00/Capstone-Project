@@ -30,4 +30,12 @@
     <string name="attach_balances_to_widget">Attach balances to widget</string>
     <string name="log_out">Log Out</string>
     <string name="logo_image">Logo Image</string>
+    <string name="import_code_label">Send the following code to your friends so that they can join the Group!</string>
+    <string name="code">CODE:</string>
+    <string name="import_create_participant_label">Or add a new participant not associated with any user.</string>
+    <string name="associate_user">Associate your user with an existing participant:</string>
+    <string name="add_new_participant_associate">Or add a new participant to the group:</string>
+    <string name="balance_list_widget">Balance List</string>
+    <string name="import_code">Import Code</string>
+    <string name="owes">owes</string>
 </resources>

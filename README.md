@@ -5,12 +5,12 @@ Final application of the Android Developer Nanodegree course. ExpenseSharing is 
 Users can create groups, invite their friends to join, create participants without associated users, add expenses, etc. 
 
 The Application uses the following technologies:
--Android Architecture Components (ViewModel and LiveData) https://developer.android.com/topic/libraries/architecture
--Dagger 2
--Firebase Auth 
--Firebase FireStore
--Material Design
--Gradle Signing Configuration
+- Android Architecture Components (ViewModel and LiveData) https://developer.android.com/topic/libraries/architecture
+- Dagger 2
+- Firebase Auth 
+- Firebase FireStore
+- Material Design
+- Gradle Signing Configuration
 
 <img src="https://i.imgur.com/Kz2b0Ii.jpg" width="200"> <img src="https://imgur.com/cdhiwta.jpg" width="200"> 
 
